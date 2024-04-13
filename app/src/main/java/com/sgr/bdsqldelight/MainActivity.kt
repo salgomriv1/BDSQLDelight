@@ -24,6 +24,44 @@ class MainActivity : AppCompatActivity() {
         //database.setupdbQueries.InsertarUsuario("pedro", "pedro@gmail.com")
         //database.setupdbQueries.InsertarProducto("galletas", 56.5)
 
+        //Se crea una instancia de la interfaz
+        val listener = object: DatabaseListener {
+            override fun onSuccess() {
+                println("Se realizo la operacion con exito")
+            }
 
+            override fun onError(error: String) {
+                println("Se produjo un error durante la operacion: $error")
+            }
+
+        }
+
+        //Se ejecuta la funcion de insertar usuario
+        //insertarUsuario("Ramon", "ramon@gmail.com", listener)
+
+        //Se ejecuta la funcion de borrar usuario
+        borrarUsuario(1, listener)
+
+
+    }
+
+    //Se realiza una funcion para insertar usuarios con un listener que informara del exito
+    fun insertarUsuario(nombre: String, email: String, listener: DatabaseListener) {
+        try {
+            database.setupdbQueries.InsertarUsuario(nombre, email)
+            listener.onSuccess()
+        }catch (e: Exception) {
+            listener.onError(e.message ?: "Error desconocido")
+        }
+    }
+
+    //Se realiza una funcion para borrar usuarios con un listener que informara del exito
+    fun borrarUsuario(id: Long, listener:DatabaseListener) {
+        try {
+            database.setupdbQueries.BorrarUsuarioPorId(id)
+            listener.onSuccess()
+        }catch(e: Exception) {
+            listener.onError(e.message ?: "Error desconocido")
+        }
     }
 }
