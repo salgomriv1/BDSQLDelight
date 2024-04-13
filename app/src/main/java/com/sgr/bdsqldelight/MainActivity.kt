@@ -7,6 +7,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.sgr.dbsqldelight.Database
+import com.sgr.dbsqldelight.db.Usuarios
 
 class MainActivity : AppCompatActivity() {
 
@@ -40,7 +41,14 @@ class MainActivity : AppCompatActivity() {
         //insertarUsuario("Ramon", "ramon@gmail.com", listener)
 
         //Se ejecuta la funcion de borrar usuario
-        borrarUsuario(1, listener)
+        //borrarUsuario(1, listener)
+
+        //Se ejecuta la funcion de actualizar usuario
+        //actualizarUsuario(2, "Ramiro", "ramiro@gmail.com", listener)
+
+        //Se ejecuta la funcion de recuperar un usuario
+        val usuario : Usuarios = database.setupdbQueries.obtenerUsuario(2).executeAsOne()
+        println(usuario.nombre + " " + usuario.email)
 
 
     }
@@ -62,6 +70,16 @@ class MainActivity : AppCompatActivity() {
             listener.onSuccess()
         }catch(e: Exception) {
             listener.onError(e.message ?: "Error desconocido")
+        }
+    }
+
+    //Se realiza una funcion para actualizar usuarios con un listener que informara del exito
+    fun actualizarUsuario(id: Long, nombre: String, mail: String, listener: DatabaseListener){
+        try {
+            database.setupdbQueries.actualizarUsuarioPorId(nombre, mail, id)
+            listener.onSuccess()
+        }catch (e: Exception) {
+            listener.onError(e.message ?: "Error descnocido")
         }
     }
 }
