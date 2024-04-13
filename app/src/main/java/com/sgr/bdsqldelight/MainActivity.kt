@@ -8,6 +8,9 @@ import androidx.core.view.WindowInsetsCompat
 import app.cash.sqldelight.driver.android.AndroidSqliteDriver
 import com.sgr.dbsqldelight.Database
 import com.sgr.dbsqldelight.db.Usuarios
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,11 +49,13 @@ class MainActivity : AppCompatActivity() {
         //Se ejecuta la funcion de actualizar usuario
         //actualizarUsuario(2, "Ramiro", "ramiro@gmail.com", listener)
 
-        //Se ejecuta la funcion de recuperar un usuario
-        val usuario : Usuarios = database.setupdbQueries.obtenerUsuario(2).executeAsOne()
-        println(usuario.nombre + " " + usuario.email)
-
-
+        //Se ejecuta la funcion de recuperar un usuario con una corutina
+        database.transaction {
+            GlobalScope.launch {
+                val usuario : Usuarios = database.setupdbQueries.obtenerUsuario(2).executeAsOne()
+                println(usuario.nombre + " " + usuario.email)
+            }
+        }
     }
 
     //Se realiza una funcion para insertar usuarios con un listener que informara del exito
@@ -75,6 +80,7 @@ class MainActivity : AppCompatActivity() {
 
     //Se realiza una funcion para actualizar usuarios con un listener que informara del exito
     fun actualizarUsuario(id: Long, nombre: String, mail: String, listener: DatabaseListener){
+
         try {
             database.setupdbQueries.actualizarUsuarioPorId(nombre, mail, id)
             listener.onSuccess()
