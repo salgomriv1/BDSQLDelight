@@ -1,0 +1,41 @@
+-- Define la tabla Usuarios
+CREATE TABLE IF NOT EXISTS Usuarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    email TEXT NOT NULL UNIQUE
+);
+
+-- Define la tabla Productos
+CREATE TABLE IF NOT EXISTS Productos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nombre TEXT NOT NULL,
+    precio REAL NOT NULL
+);
+
+-- Define la tabla Compras
+CREATE TABLE IF NOT EXISTS Compras (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    usuario_id INTEGER NOT NULL,
+    producto_id INTEGER NOT NULL,
+    cantidad INTEGER NOT NULL,
+    FOREIGN KEY (usuario_id) REFERENCES Usuarios(id),
+    FOREIGN KEY (producto_id) REFERENCES Productos(id)
+);
+
+-- Define la consulta para insertar un nuevo usuario
+InsertarUsuario: INSERT INTO Usuarios (nombre, email) VALUES (?, ?);
+
+-- Define la consulta para insertar un nuevo producto
+InsertarProducto: INSERT INTO Productos (nombre, precio) VALUES (?, ?);
+
+-- Define la consulta para insertar una nueva compra
+InsertarCompra: INSERT INTO Compras (usuario_id, producto_id, cantidad) VALUES (?, ?, ?);
+
+-- Define la consulta para borrar un usuario por ID
+BorrarUsuarioPorId: DELETE FROM Usuarios WHERE id = ?;
+
+-- Define la consulta para borrar un producto por ID
+BorrarProductoPorId: DELETE FROM Productos WHERE id = ?;
+
+-- Define la consulta para borrar una compra por ID
+BorrarCompraPorId: DELETE FROM Compras WHERE id = ?;
